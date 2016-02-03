@@ -388,6 +388,16 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             SqlStdOperatorTable.MULTIPLY, argRef, argRef);
     final int argSquaredOrdinal = lookupOrAdd(inputExprs, argSquared);
 
+/*    RelNode input;
+    if (previousSize != inputExprs.size()) {
+
+      final RelBuilder relBuilder = call.builder();
+      relBuilder.push(newInput);
+
+    } else {
+      input = oldAggRel.getInput();
+    }
+*/
     final AggregateCall sumArgSquaredAggCall =
         AggregateCall.create(
             SqlStdOperatorTable.SUM,
@@ -397,7 +407,8 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             oldAggRel.getGroupCount(),
             oldAggRel.getInput(),
             null,
-            null);
+            null,
+            ImmutableIntList.of(argOrdinal));
     final RexNode sumArgSquared =
         rexBuilder.addAggCall(sumArgSquaredAggCall,
             nGroups,
